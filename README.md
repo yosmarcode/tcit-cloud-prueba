@@ -1,4 +1,104 @@
-# React + TypeScript + Vite
+# TCIT Cloud Prueba
+
+Proyecto de prueba con React + TypeScript + Vite y backend Node.js con PostgreSQL.
+
+## 🚀 Inicio Rápido
+
+### Prerrequisitos
+
+- Node.js (v16 o superior)
+- PostgreSQL (v12 o superior)
+- npm o yarn
+
+### 1. Configurar la Base de Datos
+
+```bash
+# Opción A: Instalación completa (crea BD y tablas)
+psql -U postgres -f database/schema.sql
+
+# Opción B: Solo tablas (si la BD ya existe)
+psql -U postgres -d tcit-cloud-prueba -f database/quick-install.sql
+
+# Opción C: Agregar datos de ejemplo
+psql -U postgres -d tcit-cloud-prueba -f database/sample-data.sql
+```
+
+📖 **Documentación detallada**: Ver [database/README.md](database/README.md)
+
+### 2. Configurar el Backend
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+### 3. Configurar el Frontend
+
+```bash
+npm install
+npm run dev
+```
+
+## 📁 Estructura del Proyecto
+
+```
+tcit-cloud-prueba/
+├── database/           # Scripts SQL
+│   ├── schema.sql     # Schema completo con BD
+│   ├── quick-install.sql  # Solo tablas
+│   ├── sample-data.sql    # Datos de ejemplo
+│   └── README.md      # Documentación de BD
+├── server/            # Backend Node.js
+│   └── src/
+│       ├── conex/     # Conexión a PostgreSQL
+│       ├── controller/ # Controladores
+│       └── routers/   # Rutas API
+└── src/               # Frontend React
+    └── core/
+        └── components/ # Componentes UI
+```
+
+## 🗄️ Base de Datos
+
+### Configuración de Conexión
+
+Editar `server/src/conex/conex.js`:
+
+```javascript
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'tcit-cloud-prueba',
+  password: 'TU_CONTRASEÑA',
+  port: 5432,
+});
+```
+
+### Tablas
+
+- **Contacts**: Gestión de contactos
+  - `id`: Identificador único
+  - `name`: Nombre del contacto
+  - `descriptions`: Descripción
+  - `created_at`: Fecha de creación
+  - `updated_at`: Fecha de actualización
+
+## 🛠️ Stack Tecnológico
+
+### Frontend
+- React 18
+- TypeScript
+- Vite
+- Redux Toolkit
+
+### Backend
+- Node.js
+- Express
+- PostgreSQL
+- pg (node-postgres)
+
+## 📝 React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
