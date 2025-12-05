@@ -1,4 +1,4 @@
-import type { IColumn } from '../../App'
+import type { IColumn } from "../const"
 
 const TableComponents = ({ columns, dataSource }: { columns: IColumn[], dataSource: any[] }) => {
     return (
