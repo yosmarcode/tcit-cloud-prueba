@@ -31,7 +31,7 @@ const webApiServices = {
         return results
     },
     updateContactServices: async (contact: Contact) => {
-        const results = fetch(`${URL_API}/contact/${contact.id}`, {
+        const results = fetch(`${URL_API}/update/${contact.id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"

@@ -7,59 +7,13 @@ import webApiServices from './core/services/webApiServices';
 import { TitleComponents } from './core/components/TitleComponents';
 import { LoadingComponents } from './core/components/Loading';
 import { useAppDispatch, useAppSelector, type RootState } from './stores/Stores';
-import { setDataContactStore } from './stores/contact';
+import { setDataContactStore, type Contact } from './stores/contact';
 import ImgProfile from './assets/default-avatar-profile-icon-social-600nw-1906669723.webp';
-export interface IColumn {
-  id: string;
-  label: string;
-  align?: string;
-  width?: string;
-  sort?: boolean;
-  isShow?: boolean;
-}
+import { ModalComponents } from './core/components/ui/ModalComponents';
+import { FormContact } from './core/components/FormContact';
+import { dataColumn } from './core/const';
+import { enqueueSnackbar } from 'notistack';
 
-const dataColumn: IColumn[] = [
-  {
-    id: 'id',
-    label: '#',
-    align: 'center',
-    width: '5%',
-    sort: true,
-    isShow: true
-  },
-  {
-    id: 'profile',
-    label: '',
-    align: 'center',
-    width: '5%',
-    sort: true,
-    isShow: true
-  },
-  {
-    id: 'name',
-    label: 'Nombre',
-    align: 'center',
-    width: '20%',
-    sort: true,
-    isShow: true
-  },
-  {
-    id: 'descriptions',
-    label: 'Descripción',
-    align: 'center',
-    width: '20%',
-    sort: true,
-    isShow: true
-  },
-  {
-    id: 'actions',
-    label: 'Acciones',
-    align: 'center',
-    width: '20%',
-    sort: true,
-    isShow: true
-  },
-]
 
 function App() {
   const dispatch = useAppDispatch()
@@ -67,6 +21,12 @@ function App() {
   const [loading, setLoading] = React.useState<boolean>(false)
   const [textSearch, setTextSearch] = React.useState<string>('')
   const [isLoad, setIsLoad] = React.useState<number>(-1)
+  const [isOpenModal, setIsOpenModal] = React.useState<boolean>(false)
+  const [formValue, setFormValue] = React.useState<Contact>({
+    name: '',
+    descriptions: '',
+    id: 0,
+  })
 
   const fetchData = async () => {
     setLoading(true)
@@ -104,11 +64,56 @@ function App() {
     }
   }
 
+  const handleAddNewContact = () => {
+    setIsOpenModal(true)
+  }
+
+  const handleEditContact = (contact: any) => {
+    setIsOpenModal(true)
+    setFormValue({
+      name: contact.name,
+      descriptions: contact.descriptions,
+      id: contact.id,
+    })
+
+  }
+  const handleUpdateContact = async () => {
+    if (!formValue) return
+    let body = {
+      name: formValue.name,
+      descriptions: formValue.descriptions,
+      id: formValue.id,
+    } as Contact
+
+    setLoading(true)
+    try {
+      const response = await webApiServices.updateContactServices(body)
+      const data = await response.json()
+      console.log(data)
+      // LLAMO A LA FUNCION fetchData() PARA ACTUALIZAR LA LISTA
+      fetchData()
+      // LIMPIO EL FORMULARIO
+      setFormValue({
+        name: '',
+        descriptions: '',
+        id: 0,
+      })
+      // CIERRO EL MODAL
+      setIsOpenModal(false)
+      enqueueSnackbar('Contacto actualizado correctamente', { variant: 'success' })
+    } catch (error) {
+      console.log(error)
+      enqueueSnackbar('Error al actualizar el contacto', { variant: 'error' })
+    } finally {
+      setLoading(false)
+    }
+  }
+
 
   return (
     <Suspense fallback={<div><LoadingComponents /></div>}>
       {loading && <LoadingComponents />}
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-4 animate-slideUp'>
         <div className='bg-white p-4 rounded-2xl h-auto overflow-y-auto'>
           <div className='flex flex-col lg:flex-row lg:justify-between ml-2 p-2 border-b border-gray-200'>
             <TitleComponents title="Lista de contactos" />
@@ -134,7 +139,7 @@ function App() {
             <div className='flex justify-start pt-6 lg:pt-1 lg:justify-end'>
               <ButtonComponets
                 type="button"
-                handleClick={() => { }}
+                handleClick={handleAddNewContact}
                 title="Agregar"
               />
             </div>
@@ -144,11 +149,27 @@ function App() {
             <TableComponents columns={dataColumn ?? []} dataSource={dataContacts.map((item: any) => ({
               ...item,
               profile: (<img src={ImgProfile} alt="profile" className="w-10 h-10 rounded-full" />),
-              actions: <button type="button" onClick={() => { alert('Editar') }} title="Editar" className="
+              actions: <button type="button" onClick={() => { handleEditContact(item) }} title="Editar" className="
               bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition duration-300 cursor-pointer">Editar</button>
             })) ?? []} />
           </div>
         </div>
+
+        <ModalComponents
+          isOpen={isOpenModal}
+          onClose={() => setIsOpenModal(false)}
+          title="Agregar contacto"
+          children={<div><FormContact formValue={formValue} setFormValue={setFormValue} /></div>}
+          childrenFooter={<div className='flex gap-2'>
+
+            <ButtonComponets
+              type="button"
+              handleClick={() => { handleUpdateContact() }}
+              title="Guardar"
+            />
+          </div>}
+
+        />
 
       </div>
     </Suspense>

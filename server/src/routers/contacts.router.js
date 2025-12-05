@@ -12,7 +12,7 @@ const routerContacts = Router();
 routerContacts.get('/list', GetListContacts);
 routerContacts.post('/create', PostCreateContacts);
 routerContacts.get('/contact/:name', GetContactByName);
-routerContacts.put('/contact/:id', PutUpdateContacts);
+routerContacts.put('/update/:id', PutUpdateContacts);
 routerContacts.delete('/contact/:id', DeleteContacts);
 
 export default routerContacts;
