@@ -6,7 +6,9 @@ import { InputComponets } from './core/components/ui/InputComponets'
 import webApiServices from './core/services/webApiServices';
 import { TitleComponents } from './core/components/TitleComponents';
 import { LoadingComponents } from './core/components/Loading';
-
+import { useAppDispatch, useAppSelector, type RootState } from './stores/Stores';
+import { setDataContactStore } from './stores/contact';
+import ImgProfile from './assets/default-avatar-profile-icon-social-600nw-1906669723.webp';
 export interface IColumn {
   id: string;
   label: string;
@@ -16,10 +18,18 @@ export interface IColumn {
   isShow?: boolean;
 }
 
-export const dataColumn: IColumn[] = [
+const dataColumn: IColumn[] = [
   {
     id: 'id',
     label: '#',
+    align: 'center',
+    width: '5%',
+    sort: true,
+    isShow: true
+  },
+  {
+    id: 'profile',
+    label: '',
     align: 'center',
     width: '5%',
     sort: true,
@@ -52,27 +62,47 @@ export const dataColumn: IColumn[] = [
 ]
 
 function App() {
-
-  const [dataSource, setDataSource] = React.useState<any[]>([])
+  const dispatch = useAppDispatch()
+  const { dataContacts } = useAppSelector((state: RootState) => state.contactStore)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [textSearch, setTextSearch] = React.useState<string>('')
+  const [isLoad, setIsLoad] = React.useState<number>(-1)
+
+  const fetchData = async () => {
+    setLoading(true)
+    setIsLoad(1)
+    try {
+      const response = await webApiServices.getListContactServices()
+      const data = await response.json()
+      dispatch(setDataContactStore(data))
+      setIsLoad(1)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      try {
-        const response = await webApiServices.getListContactServices()
-        const data = await response.json()
-        setDataSource(data)
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchData()
+    isLoad === -1 && fetchData()
   }, [])
 
+  const handleSearchContactByName = async () => {
+    setLoading(true)
+    try {
+      const response = await webApiServices.getContactByNameServices(textSearch)
+      const data = await response.json()
+      dispatch(setDataContactStore(data))
+      // si el array esta vacio, se vuelve a cargar la lista
+      if (data.length === 0 || textSearch === '') {
+        fetchData()
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
 
   return (
@@ -88,13 +118,15 @@ function App() {
             <div className='flex flex-row lg:gap-2 gap-3 lg:w-lg'>
               <InputComponets
                 value={textSearch}
-                onChange={(e) => setTextSearch(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTextSearch(e.target.value)}
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => { if (e.key === 'Enter') handleSearchContactByName() }}
+                onBlur={() => { if (textSearch === '') fetchData() }}
                 type="text"
                 placeholder="Buscar nombre"
               />
               <ButtonComponets
                 type="button"
-                handleClick={() => { alert(textSearch) }}
+                handleClick={handleSearchContactByName}
                 title="Buscar"
               />
             </div>
@@ -109,10 +141,11 @@ function App() {
           </div>
 
           <div className='overflow-x-auto'>
-            <TableComponents columns={dataColumn ?? []} dataSource={dataSource.map((item: any) => ({
+            <TableComponents columns={dataColumn ?? []} dataSource={dataContacts.map((item: any) => ({
               ...item,
+              profile: (<img src={ImgProfile} alt="profile" className="w-10 h-10 rounded-full" />),
               actions: <button type="button" onClick={() => { alert('Editar') }} title="Editar" className="
-              bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 transition duration-300 cursor-pointer">Editar</button>
+              bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition duration-300 cursor-pointer">Editar</button>
             })) ?? []} />
           </div>
         </div>
