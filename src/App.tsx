@@ -9,6 +9,7 @@ import { LoadingComponents } from './core/components/Loading';
 import { useAppDispatch, useAppSelector, type RootState } from './stores/Stores';
 import { setDataContactStore, type Contact } from './stores/contact';
 import ImgProfile from './assets/default-avatar-profile-icon-social-600nw-1906669723.webp';
+import logo from './assets/TCIT_blanco-isocolor.svg';
 import { ModalComponents } from './core/components/ui/ModalComponents';
 import { FormContact } from './core/components/FormContact';
 import { dataColumn } from './core/const';
@@ -207,6 +208,9 @@ function App() {
         <div className='bg-white p-4 rounded-2xl h-auto overflow-y-auto'>
           <div className='flex flex-col lg:flex-row lg:justify-between ml-2 p-2 border-b border-gray-200'>
             <TitleComponents title="Lista de contactos" />
+            <div className='flex justify-center bg-gray-200 rounded-lg p-2'>
+              <img src={logo} alt="logo TCIT CLOUD" className="w-20 h-10" />
+            </div>
           </div>
           <div className='flex flex-col lg:flex-row lg:justify-between p-4 border-b border-gray-200'>
 
