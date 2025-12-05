@@ -5,7 +5,9 @@ export const InputComponets = ({
     onBlur,
     type,
     name,
-    placeholder
+    placeholder,
+    isError,
+    message
 }: {
     value: string | number;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -14,6 +16,8 @@ export const InputComponets = ({
     type?: 'text' | 'number' | 'email' | 'password';
     name?: string;
     placeholder?: string;
+    isError?: boolean;
+    message?: string;
 }) => {
     return (
         <div className="flex flex-col w-full">
@@ -32,6 +36,11 @@ export const InputComponets = ({
             focus:ring-green-500
             focus:border-green-500"
             />
+            {(isError && value.toString().length === 0) && (
+                <div className="flex justify-start">
+                    <p className="text-red-500 text-xs mt-1 text-xs font-semibold">{message}</p>
+                </div>
+            )}
         </div>
     )
 }   

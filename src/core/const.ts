@@ -9,7 +9,7 @@ export interface IColumn {
 
 export const dataColumn: IColumn[] = [
     {
-        id: 'id',
+        id: 'idd',
         label: '#',
         align: 'center',
         width: '5%',
