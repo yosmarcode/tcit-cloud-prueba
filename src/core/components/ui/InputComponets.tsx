@@ -1,11 +1,15 @@
 export const InputComponets = ({
     value,
     onChange,
+    onKeyDown,
+    onBlur,
     type,
     placeholder
 }: {
     value: string | number;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     type?: 'text' | 'number' | 'email' | 'password';
     placeholder?: string;
 }) => {
@@ -14,6 +18,8 @@ export const InputComponets = ({
             <input type={type || 'text'}
                 value={value}
                 onChange={onChange}
+                onKeyDown={onKeyDown}
+                onBlur={onBlur}
                 placeholder={placeholder}
                 className="
             bg-gray-50 

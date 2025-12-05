@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 body {
-    @apply bg-green-100;
+    @apply bg-blue-50;
     margin: 0;
     padding: 0;
     width: 100vw;

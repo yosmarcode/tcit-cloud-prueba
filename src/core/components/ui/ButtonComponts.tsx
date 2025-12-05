@@ -13,7 +13,7 @@ export const ButtonComponets = ({
         <button type={type || 'button'}
             onClick={() => handleClick()}
             className="
-            bg-green-500
+            bg-blue-500
          text-white
          h-10
          px-4 py-2
