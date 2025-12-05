@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface Contact {
-    id: number;
+    id?: number;
     name: string;
-    description: string;
+    descriptions: string;
 }
 
 const contactStore = createSlice({
