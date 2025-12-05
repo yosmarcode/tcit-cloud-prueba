@@ -1,6 +1,14 @@
+<div align="center">
+
+![TCIT Solutions](src/assets/bg-TCIT-SOLUCTIONS.png)
+
 # TCIT Cloud Prueba
 
-Proyecto de prueba con React + TypeScript + Vite y backend Node.js con PostgreSQL.
+**Proyecto de prueba con React + TypeScript + Vite y backend Node.js con PostgreSQL**
+
+</div>
+
+---
 
 ## 🚀 Inicio Rápido
 
