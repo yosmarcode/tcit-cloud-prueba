@@ -15,7 +15,11 @@ import { FormContact } from './core/components/FormContact';
 import { dataColumn } from './core/const';
 import { enqueueSnackbar } from 'notistack';
 import { validateFormContact } from './core/helpers';
-
+import NotFound from './core/components/NotFound';
+import { RefreshIcon } from './assets/RefreshIcon';
+import { EditIcon } from './assets/EditIcon';
+import { TashIcon } from './assets/TashIcon';
+import { SearchIcons } from './assets/SearchIcons';
 
 function App() {
   const dispatch = useAppDispatch()
@@ -172,6 +176,14 @@ function App() {
       console.log(data)
       // LLAMO A LA FUNCION fetchData() PARA ACTUALIZAR LA LISTA
       fetchData()
+      // LIMPIO EL FORMULARIO
+      setFormValue({
+        name: '',
+        descriptions: '',
+        id: 0,
+      })
+      // CIERRO EL MODAL
+      setIsOpenDeleteModal(false)
       enqueueSnackbar('Contacto eliminado correctamente', { variant: 'success' })
     } catch (error) {
       console.log(error)
@@ -206,11 +218,14 @@ function App() {
       {loading && <LoadingComponents />}
       <div className='flex flex-col gap-4 animate-slideUp'>
         <div className='bg-white p-4 rounded-2xl h-auto overflow-y-auto'>
-          <div className='flex flex-col lg:flex-row lg:justify-between ml-2 p-2 border-b border-gray-200'>
-            <TitleComponents title="Lista de contactos" />
-            <div className='flex justify-center bg-gray-200 rounded-lg p-2'>
-              <img src={logo} alt="logo TCIT CLOUD" className="w-20 h-10" />
+          <div className='flex flex-col lg:flex-row  gap-4 p-2 border-b border-gray-200'>
+            <div className='logo'>
+              <img src={logo} alt="logo TCIT CLOUD" className="w-20 h-8" />
             </div>
+            <div className='my-2'>
+              <TitleComponents title="Lista de contactos" />
+            </div>
+
           </div>
           <div className='flex flex-col lg:flex-row lg:justify-between p-4 border-b border-gray-200'>
 
@@ -227,34 +242,47 @@ function App() {
                 typeButton="primary"
                 type="button"
                 handleClick={handleSearchContactByName}
-                title="Buscar"
+                title={<SearchIcons />}
               />
             </div>
 
-            <div className='flex justify-start pt-6 lg:pt-1 lg:justify-end'>
+            <div className='flex justify-start pt-6 lg:pt-1 lg:justify-end gap-3'>
               <ButtonComponets
                 typeButton="secondary"
                 type="button"
                 handleClick={handleAddNewContact}
                 title="Agregar"
               />
+              <ButtonComponets
+                typeButton="success"
+                type="button"
+                handleClick={fetchData}
+                title={<RefreshIcon />}
+              />
             </div>
           </div>
 
-          <div className='overflow-x-auto'>
-            <TableComponents columns={dataColumn ?? []} dataSource={dataContacts.map((item: Contact, index: number) => ({
-              ...item,
-              idd: index + 1, // Agregamos  un campo idd para mostrar el número de la fila
-              profile: (<img src={ImgProfile} alt="profile" className="w-10 h-10 rounded-full" />),
-              actions: <div className="flex gap-2">
-                <button type="button" onClick={() => { handleEditContactSelected(item) }} title="Editar" className="
-              bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition duration-300 cursor-pointer">Editar</button>
-                <button type="button" onClick={() => { handleDeleteContactSelected(item) }} title="Eliminar" className="
-              bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-300 cursor-pointer">Eliminar</button>
-              </div>
-            })) ?? []} />
-          </div>
+          {dataContacts.length > 0 ? (
+            <div className='overflow-x-auto'>
+              <TableComponents columns={dataColumn ?? []} dataSource={dataContacts.map((item: Contact, index: number) => ({
+                ...item,
+                idd: index + 1, // Agregamos  un campo idd para mostrar el número de la fila
+                profile: (<img src={ImgProfile} alt="profile" className="w-10 h-10 rounded-full" />),
+                actions: <div className="flex justify-center gap-2">
+                  <button type="button" onClick={() => { handleEditContactSelected(item) }} title="Editar" className="
+              bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition duration-300 cursor-pointer"><EditIcon /></button>
+                  <button type="button" onClick={() => { handleDeleteContactSelected(item) }} title="Eliminar" className="
+              bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-300 cursor-pointer"><TashIcon /></button>
+                </div>
+              })) ?? []} />
+            </div>
+          ) : (
+            <div className='m-4'>
+              <NotFound />
+            </div>
+          )}
         </div>
+
         {/* Modal de agregar y editar */}
         <ModalComponents
           isOpen={isOpenModal}

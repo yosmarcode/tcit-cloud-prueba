@@ -9,7 +9,7 @@ export const ButtonComponets = ({
     typeButton: 'primary' | 'secondary' | 'danger' | 'warning' | 'info' | 'success';
     handleClick: () => void;
     //children?: React.ReactNode;
-    title: string;
+    title: React.ReactNode | string;
 }) => {
     return (
         <button type={type || 'button'}

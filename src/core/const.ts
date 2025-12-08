@@ -42,7 +42,7 @@ export const dataColumn: IColumn[] = [
     },
     {
         id: 'actions',
-        label: 'Acciones',
+        label: '',
         align: 'center',
         width: '20%',
         sort: true,
