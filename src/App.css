@@ -6,22 +6,23 @@
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  background-color: #676666;
+  border-radius: 5px;
+  height: 4em;
+  padding: 1em;
   will-change: filter;
-  transition: filter 300ms;
+  transition: transform 300ms;
 }
+
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  transform: scale(1.1);
 }
 
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
